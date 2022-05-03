@@ -1,0 +1,44 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
+
+version: '3.4'
+
+services:
+  authservice:
+    image: authservice:latest
+    container_name: AuthService
+    environment:
+      - AUTHDB_CONNECTIONSTRING=host=authdb;database=AuthDb;username=SentinelUser;password=1mW@tch1ngY0u;
+    restart: always
+    depends_on:
+      - authdb
+
+  resourceservice:
+    image: resourceservice:latest
+    container_name: ResourceService
+    environment:
+      - RESOURCEDB_CONNECTIONSTRING=host=resourcedb;database=ResourceDb;username=ResourceUser;password=1G0tY0u;
+    restart: always
+    depends_on:
+      - resourcedb
+
+  authdb:
+    image: postgres:latest
+    container_name: AuthDb
+    cap_add:
+      - SYS_NICE # CAP_SYS_NICE
+    environment:
+      - POSTGRES_DB=AuthDb
+      - POSTGRES_USER=SentinelUser
+      - POSTGRES_PASSWORD=1mW@tch1ngY0u
+    restart: always
+
+  resourcedb:
+    image: postgres:latest
+    container_name: ResourceDb
+    cap_add:
+      - SYS_NICE # CAP_SYS_NICE
+    environment:
+      - POSTGRES_DB=ResourceDb
+      - POSTGRES_USER=ResourceUser
+      - POSTGRES_PASSWORD=1G0tY0u
+    restart: always

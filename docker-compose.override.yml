@@ -1,0 +1,42 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
+
+version: '3.4'
+
+services:
+  authservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RUN_MIGRATIONS='true'
+    build:
+      context: ./AuthService
+      dockerfile: Dockerfile
+    ports:
+      - 6001:6001
+      - 6000:6000
+
+  resourceservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RUN_MIGRATIONS='true'
+    build:
+      context: ./ResourceService
+      dockerfile: Dockerfile
+    ports:
+      - 7001:7001
+      - 7000:7000
+
+  authdb:
+    volumes:
+      - type: bind
+        source: C:\Program Files\PostgreSQL\14\data\base
+        target: /var/lib/PostgreSQL/
+    ports:
+      - 5433:5432
+
+  resourcedb:
+    volumes:
+      - type: bind
+        source: C:\Program Files\PostgreSQL\14\data\base
+        target: /var/lib/PostgreSQL/
+    ports:
+      - 5434:5432
